@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ *
+ * Contains main module code.
+ */
+
+/**
+ * Implements hook_filter_info().
+ */
+function maildisguise_filter_info() {
+  $filters['maildisguise'] = array(
+    'title' => t('Mail address disguise'),
+    'description' => t('Every email address, link or not, will be hidden from email harvester bots.'),
+    'process callback'  => '_maildisguise_process',
+    'tips callback' => '_maildisguise_tips',
+  );
+  return $filters;
+}
+
+/**
+ * Custom process callback.
+ */
+function _maildisguise_process($text, $filter, $format) {
+  if (empty($text)) {
+    return '';
+  }
+  // TODO get class from config.
+  $css_class = 'foobarbaz';
+
+  $image = '<span class="' . $css_class . '-image"></span>';
+  $dom = new DOMDocument;
+  // Ensure utf-8 charset.
+  $dom->loadHTML('<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body>' . $text);
+  $links = $dom->getElementsByTagName('a');
+  foreach ($links as $index => $link) {
+    $href = $link->getAttribute('href');
+    if (substr($href, 0, 7) == 'mailto:') {
+      $css_classes = $link->getAttribute('class');
+      $inner_text = $link->nodeValue;
+      if (isset($css_classes) && !empty($css_classes)) {
+        $css_classes .= ' ' . $css_class;
+      }
+      else {
+        $css_classes = $css_class;
+      }
+      $link->setAttribute('class', $css_classes);
+      $replaced = str_replace(array('mailto:', '@'), array('#', '/at/'), $href);
+      $link->setAttribute('href', '');
+      $link->setAttribute('data-href', str_rot13($replaced));
+      if (strpos($inner_text, '@') !== FALSE) {
+        $inner_replaced = str_replace('@', $image, $inner_text);
+        $link->nodeValue = '';
+        $template = $dom->createDocumentFragment();
+        $markup = '<span class="' . $css_class . '-inner">' . $inner_replaced . '</span>';
+        $template->appendXML($markup);
+        $link->appendChild($template);
+      }
+    }
+  }
+  $content = $dom->getElementsByTagName('body')->item(0);
+  $body = $dom->saveHTML($content);
+  $text = str_replace(array('<body>', '</body>'), '', $body);
+
+  // Now plain text addresses.
+  $chunks = explode(' ', $text);
+  foreach ($chunks as $index => $chunk) {
+    if (preg_match('/[^\s>]+@[^\s<]+/', $chunk, $matches) > 0) {
+      $wrapped = '<span class="' . $css_class . '-inner">' . $matches[0] . '</span>';
+      $chunks[$index] =  str_replace(array($matches[0], '@'), array($wrapped, $image), $chunk);
+    }
+  }
+  $text = implode(' ', $chunks);
+  return $text;
+}
+
+/**
+ * Custom tips callback.
+ */
+function _maildisguise_tips($filter, $format, $long = FALSE) {
+  return 'return a useful hint - TODO';
+}
+
+/**
+ * Implements template_preprocess_page().
+ */
+function maildisguise_preprocess_page() {
+  // TODO get class name from config.
+  // This has to be a site-wide setting!
+  // Plus create a random class name on install.
+  $class_name = 'foobarbaz';
+
+  $css = ".{$class_name}-inner span.{$class_name}-image::after {content: '@';}";
+  backdrop_add_css($css, 'inline');
+  $settings = array(
+    'maildisguise' => array(
+      'class' => $class_name,
+    )
+  );
+  backdrop_add_js($settings, 'setting');
+}

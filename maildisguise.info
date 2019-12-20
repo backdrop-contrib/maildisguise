@@ -1,0 +1,7 @@
+name = Mail Disguise
+description = Provides a filter to disguise email addresses in content to make it harder for mail collectors.
+dependencies[] = filter
+backdrop = 1.x
+type = module
+
+scripts[] = /js/maildisguise.js
