@@ -3,8 +3,49 @@
 /**
  * @file
  *
- * Contains main module code.
+ * Mail disguise main module code.
  */
+
+/**
+ * Implements hook_menu().
+ */
+function maildisguise_menu() {
+  $items['admin/config/content/maildisguise_configure'] = array(
+    'title' => 'Mail disguise settings',
+    'description' => 'Configure Mail disguise site wide settings.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('maildisguise_admin_settings_form'),
+    'access arguments' => array('administer maildisguise'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Custom page callback for site wide settings.
+ */
+function maildisguise_admin_settings_form($form, &$form_state) {
+  $config = config('maildisguise.settings');
+  $form['#config'] = 'maildisguise.settings';
+
+  $form['css_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CSS class name'),
+    '#description' => t('CSS class to use for the span elements wrapping email addresses.'),
+    '#default_value' => $config->get('css_class'),
+    '#maxlength' => 25,
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Validation for the settings form.
+ */
+function maildisguise_admin_settings_form_validate($form, &$form_state) {
+  $values = $form_state['values'];
+  // TODO validate css class name.
+  // TODO flush cache (page and else) on submit to let the filter pick up the changes.
+}
 
 /**
  * Implements hook_filter_info().
@@ -26,8 +67,7 @@ function _maildisguise_process($text, $filter, $format) {
   if (empty($text)) {
     return '';
   }
-  // TODO get class from config.
-  $css_class = 'foobarbaz';
+  $css_class = config_get('maildisguise.settings', 'css_class');
 
   $image = '<span class="' . $css_class . '-image"></span>';
   $dom = new DOMDocument;
@@ -86,16 +126,14 @@ function _maildisguise_tips($filter, $format, $long = FALSE) {
  * Implements template_preprocess_page().
  */
 function maildisguise_preprocess_page() {
-  // TODO get class name from config.
-  // This has to be a site-wide setting!
-  // Plus create a random class name on install.
-  $class_name = 'foobarbaz';
+  // TODO create a random class name on install.
+  $css_class = config_get('maildisguise.settings', 'css_class');
 
-  $css = ".{$class_name}-inner span.{$class_name}-image::after {content: '@';}";
+  $css = ".{$css_class}-inner span.{$css_class}-image::after {content: '@';}";
   backdrop_add_css($css, 'inline');
   $settings = array(
     'maildisguise' => array(
-      'class' => $class_name,
+      'class' => $css_class,
     )
   );
   backdrop_add_js($settings, 'setting');
