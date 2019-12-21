@@ -35,6 +35,8 @@ function maildisguise_admin_settings_form($form, &$form_state) {
     '#default_value' => $config->get('css_class'),
     '#maxlength' => 20,
   );
+  // Additional submit handler.
+  $form['#submit'][] = 'maildisguise_admin_settings_cache_reset';
   return system_settings_form($form);
 }
 
@@ -44,7 +46,13 @@ function maildisguise_admin_settings_form($form, &$form_state) {
 function maildisguise_admin_settings_form_validate($form, &$form_state) {
   $values = $form_state['values'];
   // TODO validate css class name.
-  // TODO flush cache (page and else) on submit to let the filter pick up the changes.
+}
+
+/**
+ * Custom callback to let filters pickup new settings.
+ */
+function maildisguise_admin_settings_cache_reset($form, &$form_state) {
+  filter_formats_reset();
 }
 
 /**
