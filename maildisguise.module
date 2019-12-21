@@ -38,7 +38,12 @@ function maildisguise_permission() {
 function maildisguise_admin_settings_form($form, &$form_state) {
   $config = config('maildisguise.settings');
   $form['#config'] = 'maildisguise.settings';
-  // TODO better description/help text.
+  $intro_line1 = t('Site wide css class to use for the wrapper elements of disguised email addresses.');
+  $intro_line2 = t("This doesn't have to be a random string, but avoid words like <em>email</em>.");
+  $form['introduction'] = array(
+    '#type' => 'markup',
+    '#markup' => '<p>' . $intro_line1 . '<br />' . $intro_line2 . '</p>',
+  );
   $form['css_class'] = array(
     '#type' => 'textfield',
     '#title' => t('CSS class name'),
@@ -151,7 +156,7 @@ function _maildisguise_process($text, $filter, $format) {
  * Custom tips callback.
  */
 function _maildisguise_tips($filter, $format, $long = FALSE) {
-  return 'return a useful hint - TODO';
+  return t('Email addresses will be disguised in markup to reduce the chances of being harvested by spammers.');
 }
 
 /**
