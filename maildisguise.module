@@ -22,6 +22,18 @@ function maildisguise_menu() {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function maildisguise_permission() {
+  return array(
+    'administer maildisguise' => array(
+      'title' => t('Administer Mail Disguise'),
+      'description' => t('Set site wide configuration for module Mail Disguise.'),
+    ),
+  );
+}
+
+/**
  * Custom page callback for site wide settings.
  */
 function maildisguise_admin_settings_form($form, &$form_state) {
