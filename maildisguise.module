@@ -27,13 +27,13 @@ function maildisguise_menu() {
 function maildisguise_admin_settings_form($form, &$form_state) {
   $config = config('maildisguise.settings');
   $form['#config'] = 'maildisguise.settings';
-
+  // TODO better description/help text.
   $form['css_class'] = array(
     '#type' => 'textfield',
     '#title' => t('CSS class name'),
     '#description' => t('CSS class to use for the span elements wrapping email addresses.'),
     '#default_value' => $config->get('css_class'),
-    '#maxlength' => 25,
+    '#maxlength' => 20,
   );
   return system_settings_form($form);
 }
@@ -126,9 +126,7 @@ function _maildisguise_tips($filter, $format, $long = FALSE) {
  * Implements template_preprocess_page().
  */
 function maildisguise_preprocess_page() {
-  // TODO create a random class name on install.
   $css_class = config_get('maildisguise.settings', 'css_class');
-
   $css = ".{$css_class}-inner span.{$css_class}-image::after {content: '@';}";
   backdrop_add_css($css, 'inline');
   $settings = array(

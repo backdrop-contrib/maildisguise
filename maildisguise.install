@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for maildisguise module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function maildisguise_install() {
+  $rand = substr(backdrop_random_key(), 0, 16);
+  $css_class = backdrop_clean_css_identifier($rand);
+  $config = config('maildisguise.settings');
+  $config->set('css_class', $css_class);
+  $config->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function maildisguise_uninstall() {
+  $config = config('maildisguise.settings');
+  $config->delete();
+}
