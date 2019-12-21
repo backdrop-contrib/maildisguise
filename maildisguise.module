@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Mail disguise main module code.
  */
 
@@ -59,7 +58,7 @@ function maildisguise_admin_settings_form($form, &$form_state) {
 function maildisguise_admin_settings_form_validate($form, &$form_state) {
   $css_class = trim($form_state['values']['css_class']);
   if (strlen($css_class) > 16) {
-    form_set_error('css_class', t('The class name shouldn\'t be longer than 20 characters.'));
+    form_set_error('css_class', t("The class name shouldn't be longer than 20 characters."));
   }
   if (preg_match('/^[a-zA-Z][a-zA-Z0-9_-]+$/', $css_class) === 0) {
     form_set_error('css_class', t('The input contains characters not allowed in CSS classes.'));
@@ -72,11 +71,11 @@ function maildisguise_admin_settings_form_validate($form, &$form_state) {
  */
 function maildisguise_admin_settings_cache_reset($form, &$form_state) {
   // FIXME.
-  //cache_flush('cache');
+  // cache_flush('cache');
   cache_flush('filter');
   filter_formats_reset();
   cache_clear_all();
-  //backdrop_register_shutdown_function('cache_clear_all');
+  // backdrop_register_shutdown_function('cache_clear_all');
   backdrop_set_message('FIXME: flushing cache isnt working.');
 }
 
@@ -103,7 +102,7 @@ function _maildisguise_process($text, $filter, $format) {
   $css_class = config_get('maildisguise.settings', 'css_class');
 
   $image = '<span class="' . $css_class . '-image"></span>';
-  $dom = new DOMDocument;
+  $dom = new DOMDocument();
   // Ensure utf-8 charset.
   $dom->loadHTML('<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body>' . $text);
   $links = $dom->getElementsByTagName('a');
@@ -141,7 +140,7 @@ function _maildisguise_process($text, $filter, $format) {
   foreach ($chunks as $index => $chunk) {
     if (preg_match('/[^\s>]+@[^\s<]+/', $chunk, $matches) > 0) {
       $wrapped = '<span class="' . $css_class . '-inner">' . $matches[0] . '</span>';
-      $chunks[$index] =  str_replace(array($matches[0], '@'), array($wrapped, $image), $chunk);
+      $chunks[$index] = str_replace(array($matches[0], '@'), array($wrapped, $image), $chunk);
     }
   }
   $text = implode(' ', $chunks);
@@ -165,7 +164,7 @@ function maildisguise_preprocess_page() {
   $settings = array(
     'maildisguise' => array(
       'class' => $css_class,
-    )
+    ),
   );
   backdrop_add_js($settings, 'setting');
 }
