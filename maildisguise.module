@@ -34,6 +34,7 @@ function maildisguise_admin_settings_form($form, &$form_state) {
     '#description' => t('CSS class to use for the span elements wrapping email addresses.'),
     '#default_value' => $config->get('css_class'),
     '#maxlength' => 20,
+    '#required' => TRUE,
   );
   // Additional submit handler.
   $form['#submit'][] = 'maildisguise_admin_settings_cache_reset';
@@ -41,18 +42,30 @@ function maildisguise_admin_settings_form($form, &$form_state) {
 }
 
 /**
- * Validation for the settings form.
+ * Validation for the admin settings form.
  */
 function maildisguise_admin_settings_form_validate($form, &$form_state) {
-  $values = $form_state['values'];
-  // TODO validate css class name.
+  $css_class = trim($form_state['values']['css_class']);
+  if (strlen($css_class) > 16) {
+    form_set_error('css_class', t('The class name shouldn\'t be longer than 20 characters.'));
+  }
+  if (preg_match('/^[a-zA-Z][a-zA-Z0-9_-]+$/', $css_class) === 0) {
+    form_set_error('css_class', t('The input contains characters not allowed in CSS classes.'));
+  }
+  $form_state['values']['css_class'] = backdrop_clean_css_identifier($css_class);
 }
 
 /**
  * Custom callback to let filters pickup new settings.
  */
 function maildisguise_admin_settings_cache_reset($form, &$form_state) {
+  // FIXME.
+  //cache_flush('cache');
+  cache_flush('filter');
   filter_formats_reset();
+  cache_clear_all();
+  //backdrop_register_shutdown_function('cache_clear_all');
+  backdrop_set_message('FIXME: flushing cache isnt working.');
 }
 
 /**
