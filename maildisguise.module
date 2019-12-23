@@ -72,16 +72,13 @@ function maildisguise_admin_settings_form_validate($form, &$form_state) {
 }
 
 /**
- * Custom callback to let filters pickup new settings.
+ * Custom callback to flush render caches.
  */
 function maildisguise_admin_settings_cache_reset($form, &$form_state) {
-  // FIXME.
-  // cache_flush('cache');
+  // Field contents need to render again to pick up the new css class.
+  cache_flush('field');
+  // Other filtered content like blocks.
   cache_flush('filter');
-  filter_formats_reset();
-  cache_clear_all();
-  // backdrop_register_shutdown_function('cache_clear_all');
-  backdrop_set_message('FIXME: flushing cache isnt working.');
 }
 
 /**
