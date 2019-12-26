@@ -31,7 +31,7 @@ class MailDisguiseUnitTestCase extends BackdropUnitTestCase {
       ),
       'Mailto link with subject' => array(
         'source' => '<a href="mailto:baz@foo.org?subject=Hello%20World">baz@foo.org</a>',
-        'result' => "<a href=\"\" class=\"$css_class\" data-href=\"#onm/ng/sbb.bet?fhowrpg=Uryyb%20Jbeyq\"><span class=\"{$css_class}-inner\">baz<span class=\"$css_class-image\"></span>foo.org</span></a>",
+        'result' => "<a href=\"\" class=\"{$css_class}\" data-href=\"#onm/ng/sbb.bet?fhowrpg=Uryyb%20Jbeyq\"><span class=\"{$css_class}-inner\">baz<span class=\"{$css_class}-image\"></span>foo.org</span></a>",
       ),
     );
     foreach ($tests as $name => $values) {
