@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Mail Disguise filter.
+ */
+
+/**
+ * Unit tests.
+ */
+class MailDisguiseUnitTestCase extends BackdropUnitTestCase {
+
+  /**
+   * Test that email addresses are disguised.
+   */
+  function testMailDisguiseFilter() {
+    // Set up dummy filter object.
+    $filter = new stdClass();
+    $filter->callback = '_maildisguise_process';
+    $format = 'filtered_html';
+    $css_class = config_get('maildisguise.settings', 'css_class');
+
+    $tests = array(
+      'Plain email address' => array(
+        'source' => 'foo@example.com',
+        'result' => "<span class=\"{$css_class}-inner\">foo<span class=\"{$css_class}-image\"></span>example.com</span>",
+      ),
+      'Simple mailto link' => array(
+        'source' => '<a href="mailto:baz@example.com">baz@example.com</a>',
+        'result' => "<a href=\"\" class=\"{$css_class}\" data-href=\"#onm/ng/rknzcyr.pbz\"><span class=\"{$css_class}-inner\">baz<span class=\"{$css_class}-image\"></span>example.com</span></a>",
+      ),
+      'Mailto link with subject' => array(
+        'source' => '<a href="mailto:baz@foo.org?subject=Hello%20World">baz@foo.org</a>',
+        'result' => "<a href=\"\" class=\"$css_class\" data-href=\"#onm/ng/sbb.bet?fhowrpg=Uryyb%20Jbeyq\"><span class=\"{$css_class}-inner\">baz<span class=\"$css_class-image\"></span>foo.org</span></a>",
+      ),
+    );
+    foreach ($tests as $name => $values) {
+      $result = _maildisguise_process($values['source'], $filter, $format);
+      $success = $this->assertEqual($values['result'], $result, "$name is disguised");
+      if (!$success) {
+        $this->verbose('Actual result: ' . check_plain($result));
+      }
+    }
+  }
+
+}

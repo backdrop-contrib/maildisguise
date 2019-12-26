@@ -1,0 +1,5 @@
+[MailDisguiseUnitTestCase]
+name = Mail Disguise module filters
+description = Tests Mail Disguise filter.
+group = Filter
+file = maildisguise.test
