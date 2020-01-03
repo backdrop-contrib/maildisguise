@@ -170,3 +170,15 @@ function maildisguise_preprocess_page() {
   );
   backdrop_add_js($settings, 'setting');
 }
+
+/**
+ * Implements hook_config_info().
+ */
+function maildisguise_config_info() {
+  return array(
+    'maildisguise.settings' => array(
+      'label' => t('Mail Disguise settings'),
+      'group' => t('Configuration'),
+    ),
+  );
+}

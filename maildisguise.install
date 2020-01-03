@@ -11,15 +11,5 @@
 function maildisguise_install() {
   $rand = substr(backdrop_random_key(), 0, 16);
   $css_class = backdrop_clean_css_identifier($rand);
-  $config = config('maildisguise.settings');
-  $config->set('css_class', $css_class);
-  $config->save();
-}
-
-/**
- * Implements hook_uninstall().
- */
-function maildisguise_uninstall() {
-  $config = config('maildisguise.settings');
-  $config->delete();
+  config_set('maildisguise.settings', 'css_class', $css_class);
 }
