@@ -91,6 +91,8 @@ function maildisguise_admin_settings_cache_reset($form, &$form_state) {
   cache_flush('field');
   // Other filtered content like blocks.
   cache_flush('filter');
+  // Immediate site wide effect.
+  cache_flush('page');
 }
 
 /**
