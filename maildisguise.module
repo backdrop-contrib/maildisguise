@@ -33,6 +33,18 @@ function maildisguise_permission() {
 }
 
 /**
+ * Implements hook_config_info().
+ */
+function maildisguise_config_info() {
+  return array(
+    'maildisguise.settings' => array(
+      'label' => t('Mail Disguise settings'),
+      'group' => t('Configuration'),
+    ),
+  );
+}
+
+/**
  * Custom page callback for site wide settings.
  */
 function maildisguise_admin_settings_form($form, &$form_state) {
