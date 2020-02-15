@@ -120,7 +120,7 @@ function _maildisguise_process($text, $filter, $format) {
   $image = '<span class="' . $css_class . '-image"></span>';
   $dom = new DOMDocument();
   // Ensure utf-8 charset.
-  $dom->loadHTML('<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body>' . $text);
+  @$dom->loadHTML('<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body>' . $text);
   $links = $dom->getElementsByTagName('a');
   foreach ($links as $index => $link) {
     $href = $link->getAttribute('href');
