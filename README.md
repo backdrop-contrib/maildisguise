@@ -11,13 +11,14 @@ Then go to /admin/config/content/formats and enable the filter "Mail address dis
 
 ## Similar modules
 
-* https://github.com/backdrop-contrib/invisimail
+* [Invisimail](https://backdropcms.org/project/invisimail)
+* [SpamSpan](https://backdropcms.org/project/spamspan)
 
 If web accessibility has priority, choose Invisimail. If you want better protection for mailto links, especially if you plan to prefill mail subject or body via url parameters (example: `?subject=Hello%20World`), choose Mail Disguise.
 
 ## Current maintainers
 
-* Indigoxela (https://github.com/indigoxela)
+* [Indigoxela](https://github.com/indigoxela)
 
 ## License
 
