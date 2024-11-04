@@ -3,6 +3,8 @@ description = Provides a filter to disguise email addresses in content to make i
 dependencies[] = filter
 backdrop = 1.x
 type = module
+maintainers[indigoxela] = indigoxela
+
 configure = admin/config/content/maildisguise_configure
 
 scripts[] = /js/maildisguise.js
