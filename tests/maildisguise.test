@@ -41,6 +41,11 @@ class MailDisguiseUnitTestCase extends BackdropUnitTestCase {
         $this->verbose('Actual result: ' . check_plain($result));
       }
     }
+
+    // This type of link shouldn't get touched.
+    $link = '<a href="https://phpc.social/@backdropcms">visit profile</a>';
+    $result = _maildisguise_process($link, $filter, $format);
+    $this->assertEqual($link, $result, 'Fediverse link is not mangled.');
   }
 
 }
