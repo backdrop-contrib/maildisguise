@@ -152,6 +152,10 @@ function _maildisguise_process($text, $filter, $format) {
   $chunks = explode(' ', $text);
   foreach ($chunks as $index => $chunk) {
     if (preg_match('/[^\s>]+@[^\s<]+/', $chunk, $matches) > 0) {
+      // Valid URLs can contain "@", like Fediverse accounts.
+      if (strpos($chunk, 'href=') === 0) {
+        continue;
+      }
       $wrapped = '<span class="' . $css_class . '-inner">' . $matches[0] . '</span>';
       $chunks[$index] = str_replace(array($matches[0], '@'), array($wrapped, $image), $chunk);
     }
