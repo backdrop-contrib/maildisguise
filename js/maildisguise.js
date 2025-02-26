@@ -9,7 +9,12 @@
       let myclassname = settings.maildisguise.class;
 
       $('.' + myclassname).each(function () {
-        let decoded = $(this).attr('data-href').replace(/[a-zA-Z]/g, function(char) {
+        const dataHref = $(this).attr('data-href');
+        // Required attribute missing or not the pattern we're looking for.
+        if (typeof dataHref === 'undefined' || !dataHref.startsWith('#')) {
+          return;
+        }
+        let decoded = dataHref.replace(/[a-zA-Z]/g, function(char) {
           return String.fromCharCode((char <= "Z" ? 90 : 122) >= (char = char.charCodeAt(0) + 13) ? char : char - 26);
         });
         let replaced = decoded.replace(/^#/, 'mailto:').replace(/\/at\//, '@');
